@@ -1,11 +1,13 @@
 import math
 import csv
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io as spio
 
 from matplotlib.patches import Arc
 from bisect import bisect_left
+from os.path import dirname, join as pjoin
 
 """
  Implemented from the following technical notes 
@@ -473,8 +475,13 @@ def plot(title, throat_radius, angles, contour):
 
 # __main method__
 if __name__ == "__main__":
-    # constants
-    mat = spio.loadmat('to_python.mat',squeeze_me=True)
+    # Finding and importing MATLAB calculated data
+    os.chdir("../")
+    dir = os.getcwd()+"\intermediary_files"
+    filename = pjoin(dir,"to_python.mat")
+    mat = spio.loadmat(filename,squeeze_me=True)
+    os.chdir(os.getcwd()
+    # Constants
     k = mat['k']  # [-] ratio of specific heats at the throat
     l_percent = 80  # nozzle length percntage (60, 80, 90)
 
@@ -484,7 +491,8 @@ if __name__ == "__main__":
     
     # rao_bell_nozzle_contour
     angles, contour = bell_nozzle(k, aratio, throat_radius, l_percent)
-    spio.savemat("contour.mat",{"contour":contour})
+    filename = pjoin(dir,"contour.mat")
+    spio.savemat(filename,{"contour":contour})
     # plot contour
     # title = 'Bell Nozzle \n [Area Ratio = ' + str(round(aratio, 1)) + ', Throat Radius = ' + str(
     #     round(throat_radius, 1)) + ']'
