@@ -1,0 +1,6 @@
+V1.0
+- Bare bones program that creates parametrically designed rocket engines!
+- No README.txt file yet :(
+- Also it's pretty disorganized, but we're here for it.
+- Probably the most readable version in terms of understanding what it goes through top to bottom with the inserted comments,
+  all other versions the code is seperated from one another.
