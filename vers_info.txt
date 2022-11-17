@@ -1,6 +1,4 @@
-V2.0
-- Major organization of main function into multiple subfunctions
-	- subfunctions and temporary files moved into corresponding folders to reduce user confusion on what they need to access
-		- it took a lot of directory management, but worth it in the end!
-- Added figure output for basic contour geometry
-- Ordered needed constants and input values to the top of the main function
+V3.0
+- Major changes regarding contour output on MATLAB figure
+	- Shows useful dimensions for reference inserted parametrically based on engine size
+	- "Pretty" graphics

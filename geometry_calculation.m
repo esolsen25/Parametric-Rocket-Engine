@@ -4,17 +4,17 @@
 % Purpose: Calculate Geometry Specifications for Rao Nozzle
 % Iteration: HalfCat Liquid Rocket Engine
 % Team: RIT Liquid Propulsion
-clc; clear;
+clc; clear; close all;
 %% CONSTANTS
 % Material Properties
 allowable_stress = 96.5*10^6;                                              % [Pa] Allowable stress of aluminum
 FOS = 3.0;                                                                 % [-] Factor of Safety
-D_chamber_imp = 2;                                                         % [in] Chamber Diamater - Extensive Property
+D_chamber_imp = 3;                                                         % [in] Chamber Diamater - Extensive Property
 % CEAM Inputs
 AnalysisType = 2;                                                          % 1=InfiniteArea, 2=FiniteArea
 % acatRA (Ac/At) was determined from finding the most ideal value from a 3D relation
 % graph of Isp vs. AcAt vs. P_chamber
-acatRA = 4.4;                                                              % Combustion Chamber Area Ratio (Ac/At)
+acatRA = 4;                                                                % Combustion Chamber Area Ratio (Ac/At)
 % psiA was determined from the previously outlined relation and is the
 % maximum sustainable pressure we can handle in our first engine iteration.
 psiaA = 550.0;                                                             % [psia] Chamber Pressure in Absolute
@@ -36,7 +36,7 @@ cd functions
 [L_chamber] = length_calc(D_throat,A_chamber,A_throat);
 %% Wall Thickness Calculations
 cd functions
-wall_thickness(allowable_stress,pressureA(1)*100000,FOS,D_chamber);
+[safe_wall_thickness] = wall_thickness(allowable_stress,pressureA(1)*100000,FOS,D_chamber);
 %% Run Python Script
 % IMPORTANT: Check README.txt
 cd functions
@@ -47,7 +47,7 @@ cd functions
 [nozzle_contour] = process_data(nozzle_contour);
 %% Create Chamber
 cd functions
-[engine_contour] = create_chamber(nozzle_contour,L_chamber*100,D_chamber*100);
+[engine_contour,x_tangent] = create_chamber(nozzle_contour,L_chamber*100,D_chamber*100);
 %% Plot Data in MATLAB
 cd functions
-plot_data(engine_contour);
+plot_data(engine_contour(1:2,:)/2.54,safe_wall_thickness*39.3701,L_chamber*39.3701,x_tangent);

@@ -1,4 +1,4 @@
-function [engine_contour] = create_chamber(nozzle_contour,L_chamber,D_chamber)
+function [engine_contour,x_tangent] = create_chamber(nozzle_contour,L_chamber,D_chamber)
     temp = transpose(nozzle_contour);
     
     y1=D_chamber/2.0;
@@ -17,7 +17,7 @@ function [engine_contour] = create_chamber(nozzle_contour,L_chamber,D_chamber)
     bisect=theta/2;
     bisect_slope=sind(bisect)/cosd(bisect);
 
-    x1_max=5;
+    x1_max=500;
     x1_min=-x1_max;
     b_bisect=y2-bisect_slope*x2;
     y1_max=bisect_slope*x1_max+b_bisect;
@@ -25,11 +25,11 @@ function [engine_contour] = create_chamber(nozzle_contour,L_chamber,D_chamber)
 
     recip_entrant=-1/entrant_slope;
     b_recip=y3-recip_entrant*x3;
-    x2_max=5;
+    x2_max=500;
     x2_min=-x2_max;
     y2_max=recip_entrant*x2_max+b_recip;
     y2_min=recip_entrant*x2_min+b_recip;
-    
+
     P=line_intercept([x1_min x1_max;y1_min y1_max],[x2_min x2_max;y2_min y2_max]);
     delta_x=P(1)-x3;
     delta_y=P(2)-y3;
@@ -43,14 +43,6 @@ function [engine_contour] = create_chamber(nozzle_contour,L_chamber,D_chamber)
     curve=[R*cos(th)+P(1);R*sin(th)+P(2);0*th];
     
     engine_contour = [chamber_wall curve temp];
-% Export Processed Data to '.csv':
-cd ..\
-writematrix(engine_contour,'contour.csv');
-cprintf('green','Done!\n');
-
-% Get file generated path
-filepath = fileparts(which('contour.csv'));
-cprintf('green','''contour.csv'' generated at %s\n',filepath);
-
+    cd ..\
 end
 
