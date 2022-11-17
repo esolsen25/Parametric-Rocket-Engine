@@ -1,53 +1,157 @@
 %% Script Details
 % Developer: Evan Olsen
-% Last Updated: 11-13-2022 5:19AM
+% Last Updated: 11-14-2022 2:41PM
 % Purpose: Calculate Geometry Specifications for Rao Nozzle
 % Iteration: HalfCat Liquid Rocket Engine
 % Team: RIT Liquid Propulsion
 clc; clear; close all;
-%% CONSTANTS
-% Material Properties
-allowable_stress = 96.5*10^6;                                                                           % [Pa] Allowable stress of aluminum
-FOS = 3.0;                                                                                                     % [-] Factor of Safety
-D_chamber_imp = 3;                                                                                         % [in] Chamber Diamater - Extensive Property
-% CEAM Inputs
-AnalysisType = 2;                                                                                           % 1=InfiniteArea, 2=FiniteArea
-% acatRA (Ac/At) was determined from finding the most ideal value from a 3D relation
-% graph of Isp vs. AcAt vs. P_chamber
-acatRA = 4;                                                                                                   % Combustion Chamber Area Ratio (Ac/At)
-% psiA was determined from the previously outlined relation and is the
-% maximum sustainable pressure we can handle in our first engine iteration.
-psiaA = 550.0;                                                                                                % [psia] Chamber Pressure in Absolute
-% ofRA was determined from the previously outlined relation and is the
-% most ideal O/F Ratio given the other two values.
-ofRA = 6.0;                                                                                                   % Oxidizer/Fuel Ratio [wt%]
-ambP = 14.6959;                                                                                             % [psia] Pressure at Sea Level
+%% INPUTS
+% Material Properties -----------------------------------------------------
+allowable_stress = 96.5*10^6;                                              % [Pa] Allowable Stress
+    % MATERIAL: 2024-T1 Aluminum Alloy
+    % Value pulled from ASTM Standard values for material being used to
+    % manufacture a given rocket engine. Used in calculation for wall
+    % thickness.
+FOS = 3.0;                                                                 % [-] Factor of Safety
+    % Factor of safety chosen to fit desired safety of a manufactured
+    % rocket engine, only taking maximum internal pressure into account.
+    % [PROGRAM NOT DEVELOPED TO DETERMINE THERMAL STRESSES]
+% Engine Extensive Properties ---------------------------------------------
+D_chamber_imp = 3.5;                                                       % [in] Chamber Diamater - Extensive Property
+    % D_chamber_imp, or the desired chamber diamater is determined from the
+    % limits of manufacturing an injector to be fitted within the limited
+    % of the combustion chamber.
+% CEAM Required Values ----------------------------------------------------
+AnalysisType = 2;                                                          % 1=InfiniteArea, 2=FiniteArea
+    % For initial CEAM analysis, expansion and contraction ratios will be
+    % unknown: Use [1]
+    % For final CEAM analysis, expansion and contraction ratios will be
+    % known: Use[2]
+acatRA = 4;                                                                % [-] Combustion Chamber Area Ratio (Ac/At)
+    % acatRA (Ac/At) was determined from finding the most ideal value from a 3D relation
+    % graph of Isp vs. AcAt vs. P_chamber
+psiaA = 550.0;                                                             % [psia] Chamber Pressure (Absolute Units)
+    % psiA was determined from the previously outlined relation and is the
+    % maximum sustainable pressure we can handle in our first engine iteration.
+ofRA = 6.0;                                                                % Oxidizer/Fuel Ratio [wt%]
+    % ofRA was determined from the previously outlined relation and is the
+    % most ideal O/F Ratio given the other two values.
+ambP = 14.6959;                                                            % [psia] Pressure at Sea Level
+    % ampP is the ambient pressure at the altitude where the rocket engine
+    % will be fired.
+    % Sea level: 14.6959 [psia]
 %% Run Final CEAM
+% Routes to directory containing sub-functions
 cd functions
+% CEAM() Description:
+%   Implements MATLAB version of NASA CEA to calculate the basic constants
+%   which we require to generate rocket engine geometry.
+% Inputs: AnalysisType,acatRA,psiA,ofRA,ampP
+% Outputs: ispA,cstarA,aeatA,pressureA,gammaA
+%     (Can be configured for any availible CEAM output, see documentation)
 [ispA,cstarA,aeatA,pressureA,gammaA] = CEAM(AnalysisType,acatRA,psiaA,ofRA,ambP);
+% IMPORTANT: Outputs for CEAM will be 1x4 matrices, the following indices
+% represent data at a different location:
+%   [1] -> Injector Face
+%   [2] -> Comb. End
+%   [3] -> Throat
+%   [4] -> Exit
 %% Geometry Parameters Calculation
+% Routes to directory containing sub-functions
 cd functions
+% geometry_parameters() Description:
+%   Uses desired chamber diameter, proven to give ideal results during the
+%   development of this program, as well as needed CEAM outputs to generate
+%   and output basic radius, diameter, and area values for the combustion
+%   chamber, throat, and engine exit.
+% Inputs: D_chamber_imp,aeatA(4),acatRA
+% Outputs: D_throat,R_throat,A_throat,D_chamber,A_chamber
+%     (Values used throughout rest of program)
 [D_throat,R_throat,A_throat,D_chamber,A_chamber] = geometry_parameters(D_chamber_imp,aeatA(4),acatRA);
 %% Performance Parameters Calculation
+% Routes to directory containing sub-functions
 cd functions
+% performance_parameters() Description:
+%   Uses throat area to determine mass flowrate using C_star generated from
+%   CEAM. Mass flowrate then calculates ideal steady-state thrust by
+%   relating to our specific impulse, also generated by CEAM. Outputs
+%   values in command window.
+%  Inputs: ispA(4),g=9.81,cstarA(3),pressureA(1) [bar]->[Pa], A_throat
+%  Outputs: N/A
 performance_parameters(ispA(4),9.81,cstarA(3),pressureA(1)*100000,A_throat);
 %% Chamber and Characteristic Length Calculation
+% Routes to directory containing sub-functions
 cd functions
+% length_calc() Description:
+%   Calculates the length of the combustion chamber, described as the
+%   length from the end of the rocket engine to the throat, from an
+%   equation calculated using a logarithmic regression of data from many
+%   previous successful rocket engines.
+%   Source: http://www.braeunig.us/space/propuls.htm
+% Inputs: D_throat,A_chamber,A_throat
+% Outputs: L_chamber
+%     (L_chamber used in create_chamber() and plot_data())
 [L_chamber] = length_calc(D_throat,A_chamber,A_throat);
 %% Wall Thickness Calculations
+% Routes to directory containing sub-functions
 cd functions
+% wall_thickness() Description:
+%   Calculates the safe wall thickness needed to achieve a given factor of
+%   safety. Determines this using normal stress equations, thermal stress
+%   and heat transfer are NOT taken into consideration.
+% Inputs: allowable_stress,pressureA(1) [bar]->[Pa]
 [safe_wall_thickness] = wall_thickness(allowable_stress,pressureA(1)*100000,FOS,D_chamber);
 %% Run Python Script
-% IMPORTANT: Check README.txt
+% IMPORTANT: Check README.txt for troubleshooting instructions
+% Routes to directory containing sub-functions
 cd functions
+% runPython() Description:
+%   Saves MATLAB generated variables into a '.mat' which Python can
+%   understand through the SciPy.io library. Then runs the python program
+%   through MATLAB API and returns the generated contour to MATLAB by
+%   reversing the operation of SciPy.io and loading the '.mat' containing
+%   contour geometry back into MATLAB.
+% Inputs: gammaA(4),aeatA(4),R_throat [m]->[cm]
+% Outputs: nozzle_contour
+%     (nozzle_contour only contains geometry from the throat entrance to
+%     the engine exit)
 [nozzle_contour] = runPython(gammaA(4),aeatA(4),R_throat*100);
 %% Process Data
+% Routes to directory containing sub-functions
 cd functions
-% Creates 'contour.csv' file in [cm]
+% process_data() Description:
+%   Data returned from the Python program contains values which are not
+%   particularly useful for exporting geometry to Fusion360, such as
+%   including negative values as well as segmenting the sections of the
+%   engine into different rows. For our purposes, we would like everything
+%   to be in a 3 by X matrix containing all XYZ data.
+% Inputs: nozzle_contour
+% Outputs: nozzle_contour
+%     (NOTE: the input and output do not contain the same values, the
+%     output contains processed values of the input function.)
 [nozzle_contour] = process_data(nozzle_contour);
 %% Create Chamber
+% Routes to directory containing sub-functions
 cd functions
+% create_chamber() Description:
+%   Since our processed data does not include combustion chamber geometry,
+%   the goal of this function is to create that chamber geometry by
+%   creating a smooth curve between using tangent circle trigonometry.
+% Inputs: nozzle_contour,L_chamber [m]->[cm],D_chamber [m]->[cm]
+% Outputs: engine_contour,x_tangent
+%     (engine_contour contains combustion chamber_contour as well as
+%     nozzle_contour combined together, x_tangent is used within
+%     plot_data())
 [engine_contour,x_tangent] = create_chamber(nozzle_contour,L_chamber*100,D_chamber*100);
-%% Plot Data in MATLAB
+%% Plot Data in MATLAB Figure Window
+% Routes to directory containing sub-functions
 cd functions
+% plot_data() Description:
+%   Main purpose is to output engine_contour in a meaningful way into a
+%   MATLAB Figure Window, goal was to emulate Fusion360 section view.
+%   Includes MATLAB coded shading engine! Also outputs 'contour.csv' in the
+%   main function directory.
+% Inputs: engine_contour,safe_wall_thickness [m]->[in], L_chamber
+% [m]->[in],x_tangent)
+% Outputs: N/A
 plot_data(engine_contour(1:2,:)/2.54,safe_wall_thickness*39.3701,L_chamber*39.3701,x_tangent);

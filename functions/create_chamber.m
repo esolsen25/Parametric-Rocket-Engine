@@ -1,4 +1,6 @@
+%% Function Declaration
 function [engine_contour,x_tangent] = create_chamber(nozzle_contour,L_chamber,D_chamber)
+%% Chamber Geometry Calculation
     temp = transpose(nozzle_contour);
     
     y1=D_chamber/2.0;
@@ -43,6 +45,8 @@ function [engine_contour,x_tangent] = create_chamber(nozzle_contour,L_chamber,D_
     curve=[R*cos(th)+P(1);R*sin(th)+P(2);0*th];
     
     engine_contour = [chamber_wall curve temp];
+
+    % Return to home directory
     cd ..\
 end
 

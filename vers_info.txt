@@ -1,3 +1,7 @@
-V3.1
-- Changed bold-white output text to bold-black for majority of users who use default MATLAB colorscheme
-- Fixed bug causing ans output for hatchlines
+V3.2
+- Created shading engine for even fancier graphics!
+	- Verified working regardless of engine dimension
+- Updated exterior contour patch colors and hatch parameters to match that of Fusion360
+	- Purpose: create an accurate cross-sectional view of the engine before importing into CAD
+- Comments comments comments!
+

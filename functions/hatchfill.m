@@ -1,3 +1,6 @@
+
+%% Function Declaration
+% Source: https://www.mathworks.com/matlabcentral/fileexchange/30733-hatchfill
 function H = hatchfill(A,STYL,ANGLE,SPACING,FACECOL)
 %% HATCHFILL Hatching and speckling of patch objects
 %%   HATCHFILL(A) fills the patch(es) with handle(s) A.

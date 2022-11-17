@@ -1,4 +1,5 @@
-
+%% Function Declaration
+% Source: https://www.mathworks.com/matlabcentral/fileexchange/52496-offset-curve
 function [joinedx, joinedy] = offset_curve(x, y, offset, haxes, intersectremove)
     % Offset a curve by a given distance
     % Inputs:

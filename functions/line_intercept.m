@@ -1,3 +1,5 @@
+%% Function Declaration
+% Source: https://www.mathworks.com/matlabcentral/fileexchange/22441-curve-intersections
 function P = line_intercept(L1,varargin)
 %INTERX Intersection of curves
 %   P = INTERX(L1,L2) returns the intersection points of two curves L1 
