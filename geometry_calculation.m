@@ -7,21 +7,21 @@
 clc; clear; close all;
 %% CONSTANTS
 % Material Properties
-allowable_stress = 96.5*10^6;                                              % [Pa] Allowable stress of aluminum
-FOS = 3.0;                                                                 % [-] Factor of Safety
-D_chamber_imp = 3;                                                         % [in] Chamber Diamater - Extensive Property
+allowable_stress = 96.5*10^6;                                                                           % [Pa] Allowable stress of aluminum
+FOS = 3.0;                                                                                                     % [-] Factor of Safety
+D_chamber_imp = 3;                                                                                         % [in] Chamber Diamater - Extensive Property
 % CEAM Inputs
-AnalysisType = 2;                                                          % 1=InfiniteArea, 2=FiniteArea
+AnalysisType = 2;                                                                                           % 1=InfiniteArea, 2=FiniteArea
 % acatRA (Ac/At) was determined from finding the most ideal value from a 3D relation
 % graph of Isp vs. AcAt vs. P_chamber
-acatRA = 4;                                                                % Combustion Chamber Area Ratio (Ac/At)
+acatRA = 4;                                                                                                   % Combustion Chamber Area Ratio (Ac/At)
 % psiA was determined from the previously outlined relation and is the
 % maximum sustainable pressure we can handle in our first engine iteration.
-psiaA = 550.0;                                                             % [psia] Chamber Pressure in Absolute
+psiaA = 550.0;                                                                                                % [psia] Chamber Pressure in Absolute
 % ofRA was determined from the previously outlined relation and is the
 % most ideal O/F Ratio given the other two values.
-ofRA = 6.0;                                                                % Oxidizer/Fuel Ratio [wt%]
-ambP = 14.6959;                                                            % [psia] Pressure at Sea Level
+ofRA = 6.0;                                                                                                   % Oxidizer/Fuel Ratio [wt%]
+ambP = 14.6959;                                                                                             % [psia] Pressure at Sea Level
 %% Run Final CEAM
 cd functions
 [ispA,cstarA,aeatA,pressureA,gammaA] = CEAM(AnalysisType,acatRA,psiaA,ofRA,ambP);
@@ -40,7 +40,7 @@ cd functions
 %% Run Python Script
 % IMPORTANT: Check README.txt
 cd functions
-[nozzle_contour] = runPython(gammaA(3),aeatA(4),R_throat*100);
+[nozzle_contour] = runPython(gammaA(4),aeatA(4),R_throat*100);
 %% Process Data
 cd functions
 % Creates 'contour.csv' file in [cm]

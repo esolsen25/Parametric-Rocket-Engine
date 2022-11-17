@@ -13,7 +13,7 @@ R_exit = (A_exit/pi)^0.5;                                                  % [m]
 D_exit = 2*R_exit;                                                         % [m] Diameter of the Exit
 
 % Command Line Output in Imperial Units
-cprintf('*white','Geometry Parameters:\n');
+cprintf('*black','Geometry Parameters:\n');
 fprintf(['D_chamber = %.3f [in]\nD_throat = %.3f [in]\nD_exit = %.3f [in]\n'], ...
     D_chamber*39.3701,D_throat*39.3701,D_exit*39.3701);
 cd ..\

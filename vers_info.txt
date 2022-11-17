@@ -1,4 +1,3 @@
-V3.0
-- Major changes regarding contour output on MATLAB figure
-	- Shows useful dimensions for reference inserted parametrically based on engine size
-	- "Pretty" graphics
+V3.1
+- Changed bold-white output text to bold-black for majority of users who use default MATLAB colorscheme
+- Fixed bug causing ans output for hatchlines

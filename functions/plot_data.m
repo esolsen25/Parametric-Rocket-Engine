@@ -39,8 +39,8 @@ function [] = plot_data(engine_contour,safe_wall_thickness,L_chamber,x_tangent)
 %   Exterior Hatch
     engine_wall_patch_pos=patch('XData',wall_obj(1,:),'YData',wall_obj(2,:));
     engine_wall_patch_neg=patch('XData',wall_obj(1,:),'YData',-wall_obj(2,:));
-    hatchfill(engine_wall_patch_pos,'single',-45,7)
-    hatchfill(engine_wall_patch_neg,'single',45,7)
+    hatchfill(engine_wall_patch_pos,'single',-45,7);
+    hatchfill(engine_wall_patch_neg,'single',45,7);
     
 %   Grid represents a 1[in^2] section of the graph
     grid on

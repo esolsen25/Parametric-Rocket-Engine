@@ -16,7 +16,7 @@ V_chamber = 1.1*A_chamber*L_chamber;                                       % [m^
 L_characteristic = V_chamber/A_throat;                                     % [m] Characteristic Length
 
 % Command Line Output in Imperial
-cprintf('*white','Length Parameters:\n');
+cprintf('*black','Length Parameters:\n');
 fprintf('L_chamber = %.2f [in]\nL_characteristic = %.2f [in]\n', ...
     L_chamber*39.3701,L_characteristic*39.3701);
 cd ..\
