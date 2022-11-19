@@ -42,12 +42,36 @@ function [] = plot_data(engine_contour,safe_wall_thickness,L_chamber,x_tangent)
     % chamber geometry.
     if(engine_contour(2,end)>engine_contour(2,1))
         radius=engine_contour(2,end);
+
+        if(engine_contour(2,end)>3.247)
+            accuracy=255*8;
+        elseif(engine_contour(2,end)>2.797)
+            accuracy=255*7;
+        elseif(engine_contour(2,end)>2.328)
+            accuracy=255*6;
+         elseif(engine_contour(2,end)>1.870)
+             accuracy=255*5;
+        else
+            accuracy=255*4;
+        end
     else
         radius=engine_contour(2,1);
+
+        if(engine_contour(2,1)>3.247)
+            accuracy=255*8;
+        elseif(engine_contour(2,1)>2.797)
+            accuracy=255*7;
+        elseif(engine_contour(2,1)>2.328)
+            accuracy=255*6;
+         elseif(engine_contour(2,1)>1.870)
+             accuracy=255*5;
+        else
+            accuracy=255*4;
+        end
     end
     rgb_triplets=zeros(256,3);
-    for i=1:1:1021
-        rgb_triplets(i,1)=(i-1)/1020;
+    for i=1:1:accuracy+1
+        rgb_triplets(i,1)=(i-1)/accuracy;
         rgb_triplets(i,2)=rgb_triplets(i,1);
         rgb_triplets(i,3)=rgb_triplets(i,1);
     end

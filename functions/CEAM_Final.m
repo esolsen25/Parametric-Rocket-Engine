@@ -1,5 +1,5 @@
 %% Function Declaration
-function [ispA,cstarA,aeatA,pressureA,gammaA] = CEAM(AnalysisType,acatRA,psiaA,ofRA,ambP)
+function [ispA,cstarA,aeatA,pressureA,gammaA] = CEAM(acatRA,psiaA,ofRA,ambP)
     % Declaration of desired values for geometry calculation
     ispA = []; cstarA = []; aeatA = []; pressureA = []; gammaA = [];
     % Matrix Indices: 1 = Injector
@@ -10,7 +10,7 @@ function [ispA,cstarA,aeatA,pressureA,gammaA] = CEAM(AnalysisType,acatRA,psiaA,o
     % Returns to home directory and into /temp
     cd ../temp/
     % Runs the CEAM with C3H8O and N20 as reactants
-    cprintf('green','Running NASA CEAM'); pause(0.1); cprintf('green','.'); pause(0.1); cprintf('green','.'); pause(0.1); cprintf('green','.\n');
+    cprintf('green','Running Final NASA CEAM'); pause(0.1); cprintf('green','.'); pause(0.1); cprintf('green','.'); pause(0.1); cprintf('green','.\n');
     sim=CEA('problem','rocket','equilibrium','fac','acat',acatRA,'p,psia',psiaA,'pi/p', ...
         psiaA/ambP,'o/f',ofRA,'reactants','fuel','C3H8O','C',3,'H',8,'O',1,'wt%', ...
         100,'h,kJ/mol',-272.8,'t(k)',298.15,'rho,g/cc',0.785,'oxid','N2O', ...

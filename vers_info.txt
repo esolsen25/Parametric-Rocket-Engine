@@ -1,7 +1,6 @@
-V3.2
-- Created shading engine for even fancier graphics!
-	- Verified working regardless of engine dimension
-- Updated exterior contour patch colors and hatch parameters to match that of Fusion360
-	- Purpose: create an accurate cross-sectional view of the engine before importing into CAD
-- Comments comments comments!
+V4.0
+- Imported a set of functions developed by a team member, Jonah Gimmi, 
+  which calculates the best possible OF Ratio and AcAt for given reactants
+  by finding maximum Isp given chamber pressure and matrices containing AcAt
+  and OF Ratio.
 

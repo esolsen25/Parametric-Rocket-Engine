@@ -1,11 +1,14 @@
 %% Script Details
 % Developer: Evan Olsen
-% Last Updated: 11-14-2022 2:41PM
-% Purpose: Calculate Geometry Specifications for Rao Nozzle
+% Last Updated: 11-15-2022 4:16PM
+% Purpose: Calculate Geometry Specifications for Rao Nozzle for Small
+% Rocket Engines
 % Iteration: HalfCat Liquid Rocket Engine
 % Team: RIT Liquid Propulsion
 clc; clear; close all;
 %% INPUTS
+% Constants ---------------------------------------------------------------
+g = 9.80665;                                                               % [m/s^2] Acceleration Due to Gravity
 % Material Properties -----------------------------------------------------
 allowable_stress = 96.5*10^6;                                              % [Pa] Allowable Stress
     % MATERIAL: 2024-T1 Aluminum Alloy
@@ -17,39 +20,47 @@ FOS = 3.0;                                                                 % [-]
     % rocket engine, only taking maximum internal pressure into account.
     % [PROGRAM NOT DEVELOPED TO DETERMINE THERMAL STRESSES]
 % Engine Extensive Properties ---------------------------------------------
-D_chamber_imp = 3.5;                                                       % [in] Chamber Diamater - Extensive Property
+D_chamber_imp = 3.0;                                                       % [in] Chamber Diamater - Extensive Property
     % D_chamber_imp, or the desired chamber diamater is determined from the
     % limits of manufacturing an injector to be fitted within the limited
     % of the combustion chamber.
 % CEAM Required Values ----------------------------------------------------
-AnalysisType = 2;                                                          % 1=InfiniteArea, 2=FiniteArea
-    % For initial CEAM analysis, expansion and contraction ratios will be
-    % unknown: Use [1]
-    % For final CEAM analysis, expansion and contraction ratios will be
-    % known: Use[2]
-acatRA = 4;                                                                % [-] Combustion Chamber Area Ratio (Ac/At)
-    % acatRA (Ac/At) was determined from finding the most ideal value from a 3D relation
-    % graph of Isp vs. AcAt vs. P_chamber
-psiaA = 550.0;                                                             % [psia] Chamber Pressure (Absolute Units)
+P_chamber = 550;                                                           % [psia] Chamber Pressure (Absolute Units)
     % psiA was determined from the previously outlined relation and is the
     % maximum sustainable pressure we can handle in our first engine iteration.
-ofRA = 6.0;                                                                % Oxidizer/Fuel Ratio [wt%]
-    % ofRA was determined from the previously outlined relation and is the
-    % most ideal O/F Ratio given the other two values.
 ambP = 14.6959;                                                            % [psia] Pressure at Sea Level
     % ampP is the ambient pressure at the altitude where the rocket engine
     % will be fired.
     % Sea level: 14.6959 [psia]
+optimize_CEAM = true;                                                      % [bool] Optimize CEAM Parameters
+    % optimize_CEAM boolean used to decide whether you want to input an
+    % AcAt value or use a predetermined one. If optimize_CEAM = true,
+    % following given AcAt is ignored.
+if(optimize_CEAM==false)
+    AcAt=4.0;                                                              % [-] Given AcAt
+    % AcAt was traditionally determined through optimizing our OF Ratio vs.
+    % specific impulse graph given a chamber pressure, the method that was
+    % used to calculate this value has now been implemented in a function
+    % within this script.
+end
+%% Calculate OF_Ratio
+cd functions
+OF_Ratio = ofR_calc(P_chamber,ambP);
+%% Calculate AcAt
+cd functions
+if(optimize_CEAM == true)
+    AcAt = AcAt_calc(P_chamber,OF_Ratio,ambP);
+end
 %% Run Final CEAM
 % Routes to directory containing sub-functions
 cd functions
 % CEAM() Description:
 %   Implements MATLAB version of NASA CEA to calculate the basic constants
 %   which we require to generate rocket engine geometry.
-% Inputs: AnalysisType,acatRA,psiA,ofRA,ampP
+% Inputs: AcAt,psiA,OF_Ratio,ampP
 % Outputs: ispA,cstarA,aeatA,pressureA,gammaA
 %     (Can be configured for any availible CEAM output, see documentation)
-[ispA,cstarA,aeatA,pressureA,gammaA] = CEAM(AnalysisType,acatRA,psiaA,ofRA,ambP);
+[ispA,cstarA,aeatA,pressureA,gammaA] = CEAM_Finite(AcAt,P_chamber,OF_Ratio,ambP);
 % IMPORTANT: Outputs for CEAM will be 1x4 matrices, the following indices
 % represent data at a different location:
 %   [1] -> Injector Face
@@ -64,10 +75,10 @@ cd functions
 %   development of this program, as well as needed CEAM outputs to generate
 %   and output basic radius, diameter, and area values for the combustion
 %   chamber, throat, and engine exit.
-% Inputs: D_chamber_imp,aeatA(4),acatRA
+% Inputs: D_chamber_imp,aeatA(4),AcAt
 % Outputs: D_throat,R_throat,A_throat,D_chamber,A_chamber
 %     (Values used throughout rest of program)
-[D_throat,R_throat,A_throat,D_chamber,A_chamber] = geometry_parameters(D_chamber_imp,aeatA(4),acatRA);
+[D_throat,R_throat,A_throat,D_chamber,A_chamber] = geometry_parameters(D_chamber_imp,aeatA(4),AcAt);
 %% Performance Parameters Calculation
 % Routes to directory containing sub-functions
 cd functions

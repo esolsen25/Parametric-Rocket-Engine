@@ -2,7 +2,6 @@
 function [L_chamber] = length_calc(D_throat,A_chamber,A_throat)
     % Equation Variables
     D_throat_cm = D_throat*100.0;                                          % [cm] Throat Diameter in [m] Converted to [cm]
-    
 %% Equations
     % Equation - Chamber Length (Only Defined for [cm])
     % Source: http://www.braeunig.us/space/propuls.htm

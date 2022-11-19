@@ -6,9 +6,6 @@ cprintf() AddOn for formatted colored text
 Python 3.8
 >> https://www.jetbrains.com/pycharm-edu/
 
-
-
-
 PACKAGES:
 -> After Python installation, run following commands in administrator shell
 'py -m ensurepip --upgrade'
@@ -23,13 +20,14 @@ py.importlib.import_module('numpy');
 py.importlib.import_module('matplotlib');
 
 INSTRUCTIONS:
-CEAM INPUTS
->> AnalysisType, Finite or Infinite Area CEA Analysis
->> acatRA, Ideal Combustion Chamber Area Ratio (Ac/At)
->> psiaA, Chamber Pressure
->> ofRA, Oxidizer/Fuel Ratio
->> ambP, Ambient pressure at given altitude
-GEOMETRY INPUTS
->> D_chamber_imp, chamber diameter used as the extensive property to design around
+- Set desired input values outlined in the first section for a given rocket
+  engine, run code.
 
-Run code, enjoy responsibly.
+FUTURE IDEAS:
+- Import capability to produce tank specifications neccessary to power the
+  desired rocket engine generated.
+- Injector specifications, mostly preference.
+- Thermal analysis given burn time from tank specifications and temperature
+  at steady state from NASA 'CEA.p'
+- Regenerative cooling, ablative cooling, film cooling options for generated
+  geometry.
