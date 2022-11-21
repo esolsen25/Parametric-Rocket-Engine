@@ -44,10 +44,28 @@ if(optimize_CEAM==false)
     % within this script.
 end
 %% Calculate OF_Ratio
+% Routes to directory containing sub-functions
 cd functions
+% OF_Ratio() Description:
+%   Creates matrix of OF_Ratios and runs infinite chamber NASA CEAMs and
+%   finds the OF_Ratio where specific impulse is maximized for the given
+%   reactants.
+% Inputs: P_chamber, ambP
+% Outputs: OF_Ratio
+%   (OF_Ratio used in AcAt_calc() and CEAM_Final())
 OF_Ratio = ofR_calc(P_chamber,ambP);
 %% Calculate AcAt
+% Routes to directory containing sub-functions
 cd functions
+% AcAt_calc() Description:
+%   Uses previously determined optimal OF_Ratio to run finite CEAMs to find
+%   the most optimized AcAt value. Behavior of the graph of AcAt vs. Isp at
+%   a specific chamber pressure and OF_Ratio approaches an upper limit as
+%   AcAt approaches infinity. Script utilizes the 95% value of AcAt which
+%   is close to the value when the relationship has diminishing returns. 
+% Inputs: P_chamber, OF_Ratio, ambP
+% Outputs: AcAt
+%   (AcAt is used in CEAM_Final() and geometry_parameters())
 if(optimize_CEAM == true)
     AcAt = AcAt_calc(P_chamber,OF_Ratio,ambP);
 end
@@ -59,8 +77,8 @@ cd functions
 %   which we require to generate rocket engine geometry.
 % Inputs: AcAt,psiA,OF_Ratio,ampP
 % Outputs: ispA,cstarA,aeatA,pressureA,gammaA
-%     (Can be configured for any availible CEAM output, see documentation)
-[ispA,cstarA,aeatA,pressureA,gammaA] = CEAM_Finite(AcAt,P_chamber,OF_Ratio,ambP);
+%     (Can be configured for any available CEAM output, see documentation)
+[ispA,cstarA,aeatA,pressureA,gammaA] = CEAM_Final(AcAt,P_chamber,OF_Ratio,ambP);
 % IMPORTANT: Outputs for CEAM will be 1x4 matrices, the following indices
 % represent data at a different location:
 %   [1] -> Injector Face

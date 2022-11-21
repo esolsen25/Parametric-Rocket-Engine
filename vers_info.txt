@@ -1,6 +1,6 @@
-V4.0
-- Imported a set of functions developed by a team member, Jonah Gimmi, 
-  which calculates the best possible OF Ratio and AcAt for given reactants
-  by finding maximum Isp given chamber pressure and matrices containing AcAt
-  and OF Ratio.
+V4.1
+- Hotfix: V4.0 was pushed with an incorrect function call, is now resolved
+          and the program will run.
+- Missing comments added to new AcAt_calc() and ofR_calc() function calls
+  inside of the main function.
 
